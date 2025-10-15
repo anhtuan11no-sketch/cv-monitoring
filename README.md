@@ -1,6 +1,6 @@
 # 🧠 CV Monitoring Pipeline
 
-Hệ thống **tự động theo dõi thư mục chứa CV và JD**, trích xuất thông tin bằng mô hình ngôn ngữ (LLM), tạo embedding, và index vào **Elasticsearch** để phục vụ tìm kiếm, so khớp hồ sơ và vị trí.
+Hệ thống **tự động theo dõi thư mục chứa CV và JD**, trích xuất thông tin bằng mô hình ngôn ngữ (LLM), tạo embedding và index vào **Elasticsearch** để phục vụ tìm kiếm, so khớp hồ sơ và vị trí.
 
 ---
 
