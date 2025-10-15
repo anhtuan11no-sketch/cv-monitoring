@@ -1,10 +1,16 @@
-# CV Monitoring & Ingestion Pipeline
+# CV Monitoring Pipeline
 
-## 🧠 Overview
-This project watches a folder for new or modified `.txt` or `.pdf` files, extracts structured information using an LLM, embeds the text into vectors, and indexes the data into Elasticsearch.
+This project automatically watches for new CV and JD text files, extracts structured information using a local LLM API, embeds data, and indexes it into Elasticsearch.
 
-## 🚀 Run
+## 🚀 Features
+- Auto-detect new CV/JD files (via Watchdog)
+- Extract structured JSON using LLM (local API)
+- Generate embeddings and push to Elasticsearch
+- Supports PDF linking and JSON output
+- Multi-threaded file processing
+
+## 🛠️ Run locally
 ```bash
-pip install -r requirements.txt
-python src/watcher.py
+python api_main.py
+
 
