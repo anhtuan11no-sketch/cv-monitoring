@@ -1,0 +1,7 @@
+__pycache__/
+*.log
+.env
+outputs/
+archive/
+*.pdf
+*.txt
