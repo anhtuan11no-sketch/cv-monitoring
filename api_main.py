@@ -462,7 +462,7 @@ async def search(request: JDRequest):
                 for sec_idx, sec in enumerate(sections):
                     cos_val = float(cosine_matrix[jd_idx, sec_idx])
                     #if cos_val >= request.value_cosine_threshold:
-                    if cos_val >= 0.75:
+                    if cos_val >= 0.78:
                         field_score = cos_val * jd_weight
                         jd_value_score += field_score
                         matched_count += 1
