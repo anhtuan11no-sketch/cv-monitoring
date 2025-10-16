@@ -14,9 +14,10 @@ from watchdog.events import FileSystemEventHandler
 from elasticsearch import Elasticsearch
 from queue import Queue
 from threading import Thread
+import unicodedata
 
 # ---------------- Config ----------------
-BASE_INPUT_DIR = "/home/root1/project_ai_cv/inputs_demo"
+BASE_INPUT_DIR = "/home/root1/project_ai_cv/cv-monitoring-pipeline/inputs_demo"
 EXTRACT_URL = "http://10.0.3.54:8001/v1/chat/completions"
 EMBED_URL = "http://10.0.3.54:8004/embed"
 VECTOR_DIMS = 384
@@ -63,13 +64,41 @@ def create_index_if_not_exists(es_index):
     except Exception as e:
         console.print(f"[ERROR] Index create failed: {e}", style="red")
 
+
+# ---------------- Elasticsearch ----------------
+def sanitize_index_name(name: str) -> str:
+    """
+    Chuyển tiếng Việt sang không dấu, thay ký tự không hợp lệ thành _,
+    dùng được làm index Elasticsearch.
+    """
+    # 1. Chuyển sang không dấu
+    name = unicodedata.normalize('NFKD', name)
+    name = ''.join(c for c in name if not unicodedata.combining(c))
+
+    # 2. Chuyển thành chữ thường
+    name = name.lower()
+
+    # 3. Thay tất cả ký tự không hợp lệ (khoảng trắng, /, \, *, ?, ", <, >, |, ,) bằng _
+    # name = re.sub(r'[^a-z0-9_\-+]', '_', name)
+
+    # 4. Loại bỏ _ trùng lặp
+    name = re.sub(r'_+', '_', name)
+
+    # 5. Bỏ _ đầu và cuối
+    name = name.strip('_')
+
+    # Nếu trống, trả về default_index
+    return name or "default_index"
+
 def get_index_from_folder(folder_path):
     parts = folder_path.split(os.sep)
     if "cv" in parts:
-        return f"cv_{parts[-1]}"
+        raw_index = f"cv_{parts[-1]}"
     elif "jd" in parts:
-        return f"jd_{parts[-1]}"
-    return "default_index"
+        raw_index = f"jd_{parts[-1]}"
+    else:
+        raw_index = "default_index"
+    return sanitize_index_name(raw_index)
 
 def get_doc_type_from_path(path):
     parts = path.split(os.sep)
